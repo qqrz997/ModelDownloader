@@ -162,7 +162,7 @@ namespace ModelDownloader.Settings.UI
             ModelsaberSearch searchOptions = new ModelsaberSearch((ModelsaberSearchType)modelTypeOptions.IndexOf(modelTypeChoice), page, currentSort, currentSearch);
             List<ModelsaberEntry> entries = await ModelsaberUtils.GetPage(searchOptions);
 
-            if (!searchingForPage || searchOptions == null)
+            if (!searchingForPage || entries == null)
             {
                 return;
             }

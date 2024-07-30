@@ -161,7 +161,12 @@ namespace ModelDownloader.Settings.UI
             parserParams.EmitEvent("open-loadingModal");
             ModelsaberSearch searchOptions = new ModelsaberSearch((ModelsaberSearchType)modelTypeOptions.IndexOf(modelTypeChoice), page, currentSort, currentSearch);
             List<ModelsaberEntry> entries = await ModelsaberUtils.GetPage(searchOptions);
-            if (!searchingForPage) return;
+
+            if (!searchingForPage || searchOptions == null)
+            {
+                return;
+            }
+
             foreach (ModelsaberEntry entry in entries)
             {
                 _models.Add(entry);

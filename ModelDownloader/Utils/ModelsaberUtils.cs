@@ -16,6 +16,7 @@ namespace ModelDownloader
         public static async Task<List<ModelsaberEntry>> GetPage(ModelsaberSearch searchOptions)
         {
             client.BaseAddress = new Uri("https://modelsaber.com/api/v2/");
+            client.DefaultRequestHeaders.Add("User-Agent", "App/1.0.0");
             // Call asynchronous network methods in a try/catch block to handle exceptions.
             try
             {

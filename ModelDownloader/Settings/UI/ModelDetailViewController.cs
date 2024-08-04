@@ -10,6 +10,7 @@ using ModelDownloader.Utils;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
@@ -17,7 +18,7 @@ using Zenject;
 
 namespace ModelDownloader.Settings.UI
 {
-    internal class ModelDetailViewController : BSMLResourceViewController, INotifiableHost
+    internal class ModelDetailViewController : BSMLResourceViewController, INotifyPropertyChanged
     {
         public override string ResourceName => "ModelDownloader.Settings.UI.Views.modelDetail.bsml";
 

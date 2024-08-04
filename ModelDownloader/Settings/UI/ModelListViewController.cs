@@ -88,9 +88,6 @@ namespace ModelDownloader.Settings.UI
         [UIAction("donateClicked")]
         public void DonateClicked()
         {
-            //button.interactable = false;
-            //linkOpened.gameObject.SetActive(true);
-            //StartCoroutine(SecondRemove(button));
             parserParams.EmitEvent("close-patreonModal");
             Application.OpenURL("https://www.patreon.com/bobbievr");
         }
@@ -115,10 +112,8 @@ namespace ModelDownloader.Settings.UI
         }
 
         [UIAction("pageUpPressed")]
-        internal void PageUpPressed()
-        {
+        internal void PageUpPressed() { }
 
-        }
         [UIAction("pageDownPressed")]
         internal void PageDownPressed()
         {
@@ -153,7 +148,6 @@ namespace ModelDownloader.Settings.UI
             ClearData();
         }
 
-
         public async void GetModelPages(int page)
         {
             searchingForPage = true;
@@ -182,20 +176,6 @@ namespace ModelDownloader.Settings.UI
             if (pageScrollAmount < 0) pageScrollAmount = 0;
             customListTableData.tableView.ScrollToCellWithIdx(pageScrollAmount, TableView.ScrollPositionType.Beginning, false);
             searchingForPage = false;
-            /*
-             * Popup disabled temporarily due to potentially being controversial
-            if (firstSearch)
-            {
-                firstSearch = false;
-                if (_pluginConfig.ShowPopup == "NextStartup") _pluginConfig.ShowPopup = "True";
-                else if (_pluginConfig.ShowPopup == "True")
-                {
-                    // social experiment
-                    parserParams.EmitEvent("open-patreonModal");
-                    _pluginConfig.ShowPopup = "False";
-                }
-            }
-            */
         }
 
         public class ModelCellInfo : CustomListTableData.CustomCellInfo
@@ -258,7 +238,6 @@ namespace ModelDownloader.Settings.UI
                 }
             }
             FixAnimatedIcons(); 
-            //customListTableData.tableView.RefreshCellsContent();
         }
 
         internal void FixAnimatedIcons()
@@ -277,18 +256,7 @@ namespace ModelDownloader.Settings.UI
                         if (dataCell.icon.name.EndsWith(".gif"))
                         {
                             var foundAnimation = AnimationController.instance.RegisteredAnimations.FirstOrDefault(x => x.Key == dataCell.icon.name);
-                            if (foundAnimation.Value != null)
-                            {
-                                /*if (foundAnimation.Value.activeImages.Count > 0)
-                                {
-                                    Plugin.Log.Info("OH NO");
-                                }
-                                List<Image> newImagelist = new List<Image>();
-                                newImagelist.Add(image);
-                                image.sprite = foundAnimation.Value.sprites[0];
-                                foundAnimation.Value.activeImages = newImagelist;*/
-                                foundAnimation.Value.activeImages.Add(image);
-                            }
+                            foundAnimation.Value?.activeImages.Add(image);
                         }
                         else image.sprite = dataCell.icon;
                         continue;
@@ -318,17 +286,21 @@ namespace ModelDownloader.Settings.UI
         internal void DisplayWarningPromptIfNeeded(ModelsaberEntry model)
         {
             if (ignoringWarnings || _pluginConfig.DisableWarnings) return;
-            string warningPromptText = "";
-            if (model.Type == "bloq" && !ModUtils.CustomNotesInstalled) warningPromptText = "Custom Notes";
-            else if (model.Type == "platform" && !ModUtils.CustomPlatformsInstalled) warningPromptText = "Custom Platforms";
-            else if (model.Type == "avatar" && !ModUtils.CustomAvatarsInstalled) warningPromptText = "Custom Avatars";
-            else if (model.Type == "saber" && !ModUtils.CustomSabersInstalled && !ModUtils.SaberFactoryInstalled) warningPromptText = "Saber Factory";
-            if(warningPromptText != "")
+            string warningPromptText = model.Type switch
             {
-                NameText.text = $"This model requires the {warningPromptText} mod. Please install this mod from Mod Assistant or #pc-mods in BSMG to properly use this model.";
+                "bloq" when !ModUtils.CustomNotesInstalled => "the Custom Notes mod",
+                "platform" when !ModUtils.CustomPlatformsInstalled => "the Custom Platforms mod",
+                "avatar" when !ModUtils.CustomAvatarsInstalled => "the <b>Custom Avatars mod",
+                "saber" when !ModUtils.CustomSabersInstalled => "either CustomSabers, CustomSabersLite, or SaberFactory mods",
+                _ => string.Empty
+            };
+            if (warningPromptText != string.Empty)
+            {
+                NameText.text = $"This model requires {warningPromptText}. You must install it using a modding tool such as BSManager.";
                 parserParams.EmitEvent("open-warningModal");
             }
         }
+
         protected override void DidDeactivate(bool removedFromHierarchy, bool screenSystemDisabling)
         {
             interactableGroup.gameObject.SetActive(true);
@@ -350,9 +322,6 @@ namespace ModelDownloader.Settings.UI
             parserParams.EmitEvent("close-warningModal");
         }
 
-        // =========================
-        // SORT CODE
-        // =========================
         [UIComponent("sourceList")]
         public CustomListTableData sourceListTableData = null;
 
@@ -373,9 +342,7 @@ namespace ModelDownloader.Settings.UI
                 GetModelPages(currentPage);
             }
         }
-        // =========================
-        // SEARCH CODE
-        // =========================
+
         [UIComponent("searchKeyboard")]
         public ModalKeyboard _searchKeyboard = null;
 
@@ -396,7 +363,6 @@ namespace ModelDownloader.Settings.UI
         {
             interactableGroup.gameObject.SetActive(false);
             customListTableData.tableView.ClearSelection();
-            // filterDidChange?.Invoke();
         }
 
         [UIComponent("interactableGroup")]
@@ -411,19 +377,11 @@ namespace ModelDownloader.Settings.UI
 
             ClearData();
             GetModelPages(currentPage);
-            //   Plugin.log.Info("Search Pressed: " + text);
-            //_currentSearch = text;
-            //_currentFilter = Filters.FilterMode.Search;
-            //ClearData();
-            //filterDidChange?.Invoke();
-            //await GetNewPage(3);
-
         }
 
         internal void TagKeyPressed(KEYBOARD.KEY key)
         {
             _searchKeyboard.keyboard.KeyboardText.text = "tag:";
         }
-
     }
 }

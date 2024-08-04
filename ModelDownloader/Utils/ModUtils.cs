@@ -6,15 +6,13 @@ namespace ModelDownloader.Utils
     public static class ModUtils
     {
         public static bool CustomSabersInstalled = false;
-        public static bool SaberFactoryInstalled = false;
         public static bool CustomNotesInstalled = false;
         public static bool CustomPlatformsInstalled = false;
         public static bool CustomAvatarsInstalled = false;
 
         public static void CheckInstalledMods()
         {
-            CustomSabersInstalled = CheckIfModInstalled("Custom Sabers");
-            SaberFactoryInstalled = CheckIfModInstalled("Saber Factory");
+            CustomSabersInstalled = CheckIfModInstalled("Custom Sabers") || CheckIfModInstalled("Saber Factory") || CheckIfModInstalled("CustomSabersLite");
             CustomNotesInstalled = CheckIfModInstalled("CustomNotes");
             CustomPlatformsInstalled = CheckIfModInstalled("Custom Platforms");
             CustomAvatarsInstalled = CheckIfModInstalled("Custom Avatars");
